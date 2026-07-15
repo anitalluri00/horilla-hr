@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: horilla
+  namespace: horilla
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: horilla
+
+  template:
+    metadata:
+      labels:
+        app: horilla
+
+    spec:
+      containers:
+        - name: horilla
+
+          image: anitalluri00/horilla:latest
+
+          imagePullPolicy: Always
+
+          command:
+            - sh
+            - ./entrypoint.sh
+
+          ports:
+            - containerPort: 8000
+
+          env:
+            - name: DATABASE_URL
+              value: postgres://postgres:postgres@db:5432/horilla
+
+          volumeMounts:
+            - name: media
+              mountPath: /app/media
+
+      volumes:
+        - name: media
+          emptyDir: {}
